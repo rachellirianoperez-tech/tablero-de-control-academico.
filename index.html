@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tablero de Control Académico</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 font-sans antialiased min-h-screen">
+
+    <!-- ZONA 1: Encabezado y Menú de Navegación -->
+    <header class="bg-slate-800 border-b border-slate-700 px-6 py-4 relative z-50">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            
+            <!-- Logo / Título del Tablero -->
+            <div class="flex items-center space-x-3">
+                <div class="bg-indigo-600 p-2 rounded-lg text-white font-bold">🎓</div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-wide">Control Académico</h1>
+                    <p class="text-xs text-slate-400">Instituto Politecnico Padre Zegri</p>
+                </div>
+            </div>
+
+            <!-- Menú de Navegación con Submenús Interactivos -->
+            <nav class="flex flex-wrap items-center gap-2 md:gap-4">
+                <button onclick="filtrarInformatica('General')" class="bg-indigo-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
+                    General
+                </button>
+
+                <!-- Menú Desplegable: Informática -->
+                <div class="relative group">
+                    <button class="text-slate-300 group-hover:text-white group-hover:bg-slate-700 text-sm font-medium px-4 py-2 rounded-lg transition flex items-center gap-1">
+                        Informática ▾
+                    </button>
+                    <div class="absolute left-0 mt-1 w-44 bg-slate-800 border border-slate-700 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                        <a href="#" onclick="filtrarInformatica('4to')" class="block px-4 py-2 text-sm text-slate-300 hover:bg-indigo-600 hover:text-white rounded-t-lg transition">4to de Informática</a>
+                        <a href="#" onclick="filtrarInformatica('5to')" class="block px-4 py-2 text-sm text-slate-300 hover:bg-indigo-600 hover:text-white transition">5to de Informática</a>
+                        <a href="#" onclick="filtrarInformatica('6to')" class="block px-4 py-2 text-sm text-slate-300 hover:bg-indigo-600 hover:text-white rounded-b-lg transition">6to de Informática</a>
+                    </div>
+                </div>
+
+                <!-- Menú Desplegable: Gestión -->
+                <div class="relative group">
+                    <button class="text-slate-300 group-hover:text-white group-hover:bg-slate-700 text-sm font-medium px-4 py-2 rounded-lg transition flex items-center gap-1">
+                        Gestión ▾
+                    </button>
+                    <div class="absolute left-0 mt-1 w-44 bg-slate-800 border border-slate-700 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                        <a href="#" class="block px-4 py-2 text-sm text-slate-300 hover:bg-indigo-600 hover:text-white rounded-t-lg transition">4to de Gestión</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-slate-300 hover:bg-indigo-600 hover:text-white transition">5to de Gestión</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-slate-300 hover:bg-indigo-600 hover:text-white rounded-b-lg transition">6to de Gestión</a>
+                    </div>
+                </div>
+
+                <!-- Menú Desplegable: Enfermería -->
+                <div class="relative group">
+                    <button class="text-slate-300 group-hover:text-white group-hover:bg-slate-700 text-sm font-medium px-4 py-2 rounded-lg transition flex items-center gap-1">
+                        Enfermería ▾
+                    </button>
+                    <div class="absolute left-0 mt-1 w-44 bg-slate-800 border border-slate-700 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                        <a href="#" class="block px-4 py-2 text-sm text-slate-300 hover:bg-indigo-600 hover:text-white rounded-t-lg transition">4to de Enfermería</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-slate-300 hover:bg-indigo-600 hover:text-white transition">5to de Enfermería</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-slate-300 hover:bg-indigo-600 hover:text-white rounded-b-lg transition">6to de Enfermería</a>
+                    </div>
+                </div>
+
+                <!-- Menú Desplegable: Electricidad -->
+                <div class="relative group">
+                    <button class="text-slate-300 group-hover:text-white group-hover:bg-slate-700 text-sm font-medium px-4 py-2 rounded-lg transition flex items-center gap-1">
+                        Electricidad ▾
+                    </button>
+                    <div class="absolute left-0 mt-1 w-44 bg-slate-800 border border-slate-700 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                        <a href="#" class="block px-4 py-2 text-sm text-slate-300 hover:bg-indigo-600 hover:text-white rounded-t-lg transition">4to de Electricidad</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-slate-300 hover:bg-indigo-600 hover:text-white transition">5to de Electricidad</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-slate-300 hover:bg-indigo-600 hover:text-white rounded-b-lg transition">6to de Electricidad</a>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Filtro de Año Lectivo conectado -->
+            <div class="flex items-center gap-3">
+                <select id="selectAnio" onchange="cambiarAnio()" class="bg-slate-700 text-sm border border-slate-600 rounded-lg px-3 py-2 focus:outline-none focus:border-indigo-500">
+                    <option value="2026-2027">2026-2027</option>
+                    <option value="2025-2026">2025-2026</option>
+                </select>
+            </div>
+
+        </div>
+    </header>
+
+    <!-- Contenedor Principal -->
+    <main class="p-6 max-w-7xl mx-auto space-y-6">
+
+        <!-- Título Dinámico de la Vista -->
+        <div class="flex justify-between items-center">
+            <h2 id="tituloVista" class="text-2xl font-bold text-indigo-400">Rendimiento General</h2>
+        </div>
+
+        <!-- ZONA 2: Tarjetas KPI -->
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="bg-slate-800 border border-slate-700 p-5 rounded-xl shadow-sm">
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Promedio General</p>
+                <h3 id="kpiPromedio" class="text-2xl font-bold mt-1">8.6 / 10</h3>
+                <span class="text-xs text-emerald-400 font-medium flex items-center mt-2">▲ vs período ant.</span>
+            </div>
+            <div class="bg-slate-800 border border-slate-700 p-5 rounded-xl shadow-sm">
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Estudiantes Evaluados</p>
+                <h3 id="kpiEstudiantes" class="text-2xl font-bold mt-1">68</h3>
+                <span class="text-xs text-slate-400 font-medium flex items-center mt-2">Total del área</span>
+            </div>
+            <div class="bg-slate-800 border border-slate-700 p-5 rounded-xl shadow-sm">
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Tasa de Aprobación</p>
+                <h3 id="kpiAprobacion" class="text-2xl font-bold mt-1">91.1%</h3>
+                <span class="text-xs text-emerald-400 font-medium flex items-center mt-2">Meta alcanzada</span>
+            </div>
+            <div class="bg-slate-800 border border-slate-700 p-5 rounded-xl shadow-sm">
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Alumnos en Riesgo</p>
+                <h3 id="kpiRiesgo" class="text-2xl font-bold mt-1">6</h3>
+                <span class="text-xs text-rose-400 font-medium flex items-center mt-2">🔴 Requieren Tutoría</span>
+            </div>
+        </section>
+
+        <!-- ZONA 3: Gráficos Principales -->
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Gráfico de Líneas -->
+            <div class="lg:col-span-2 bg-slate-800 border border-slate-700 p-5 rounded-xl shadow-sm">
+                <h2 class="text-base font-semibold mb-4 text-slate-200">Evolución de Calificaciones por Parcial</h2>
+                <div class="relative h-72">
+                    <canvas id="lineChart"></canvas>
+                </div>
+            </div>
+            <!-- Gráfico de Barras -->
+            <div class="bg-slate-800 border border-slate-700 p-5 rounded-xl shadow-sm">
+                <h2 id="tituloGraficoBarra" class="text-base font-semibold mb-4 text-slate-200">Comparativa General por Curso</h2>
+                <div class="relative h-72 flex justify-center items-center">
+                    <canvas id="barChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- ZONA 4: Tabla Operativa de Alumnos -->
+        <section class="bg-slate-800 border border-slate-700 rounded-xl shadow-sm overflow-hidden">
+            <div class="p-5 border-b border-slate-700 flex justify-between items-center">
+                <h2 class="text-base font-semibold text-slate-200">Listado de Estudiantes</h2>
+                <input type="text" id="searchInput" placeholder="Buscar alumno..." class="bg-slate-700 text-sm border border-slate-600 rounded-lg px-3 py-1.5 focus:outline-none focus:border-indigo-500">
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-700/50 text-slate-400 text-xs uppercase tracking-wider">
+                            <th class="p-4">Matrícula</th>
+                            <th class="p-4">Estudiante</th>
+                            <th class="p-4">Curso / Sección</th>
+                            <th class="p-4">Promedio</th>
+                            <th class="p-4">Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody" class="divide-y divide-slate-700 text-sm">
+                        <!-- Se llena con JS -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Script externo -->
+    <script src="script.js"></script>
+</body>
+</html>
